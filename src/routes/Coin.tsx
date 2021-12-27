@@ -13,6 +13,8 @@ import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import Chart from "./Chart";
 import Price from "./Price";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -171,12 +173,11 @@ interface PriceData {
   };
 }
 
-interface ICoinProps {
-  toggleDark: () => void;
-  isDark: boolean;
-}
+interface ICoinProps {}
 
-function Coin({ toggleDark, isDark }: ICoinProps) {
+function Coin({}: ICoinProps) {
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
   const { coinId } = useParams() as unknown as RouteParams; // const { coinId } = useParams<{ coinId: string }>(); 이렇게 해도 됨
   // const { name } = useLocation().state as RouteState;
   const { state } = useLocation() as RouteState;
@@ -224,8 +225,8 @@ function Coin({ toggleDark, isDark }: ICoinProps) {
         </Back>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+          <button onClick={toggleDarkAtom}>Mode</button>
         </Title>
-        <button onClick={toggleDark}>Mode</button>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
@@ -265,10 +266,7 @@ function Coin({ toggleDark, isDark }: ICoinProps) {
             </Tap>
           </Tabs>
           <Routes>
-            <Route
-              path="chart"
-              element={<Chart coinId={coinId} isDark={isDark} />}
-            />
+            <Route path="chart" element={<Chart coinId={coinId} />} />
             <Route path="price" element={<Price coinId={coinId} />} />
           </Routes>
         </>
