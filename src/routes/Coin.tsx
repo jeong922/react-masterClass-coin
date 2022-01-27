@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { Helmet } from "react-helmet";
 import {
   Link,
   Route,
@@ -15,6 +14,9 @@ import Chart from "./Chart";
 import Price from "./Price";
 import { useSetRecoilState } from "recoil";
 import { isDarkAtom } from "../atoms";
+import ToggleBtn from "../components/ToggleBtn";
+import { HelmetProvider, Helmet } from "react-helmet-async";
+import Loader from "../components/Loader";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -27,25 +29,12 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  button {
-    background-color: ${(props) => props.theme.listbg};
-    color: ${(props) => props.theme.textColor};
-    border: none;
-    margin-left: 20px;
-    &:hover {
-      transform: scale(1.1);
-    }
-  }
 `;
 
 const Title = styled.h1`
+  font-weight: 600;
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
-`;
-
-const Loader = styled.span`
-  display: block;
-  text-align: center;
 `;
 
 const Overview = styled.div`
@@ -54,7 +43,9 @@ const Overview = styled.div`
   background-color: ${(props) => props.theme.listbg};
   padding: 10px 20px;
   border-radius: 10px;
+  border: 2px solid ${(props) => props.theme.border};
 `;
+
 const OverviewItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -85,6 +76,7 @@ const Tap = styled.span<{ isActive: boolean }>`
   background-color: ${(props) => props.theme.listbg};
   padding: 7px 0px;
   border-radius: 10px;
+  border: 2px solid ${(props) => props.theme.border};
   color: ${(props) =>
     props.isActive ? props.theme.accentColor : props.theme.textColor};
   a {
@@ -214,22 +206,24 @@ function Coin({}: ICoinProps) {
   const loading = infoLoading || tickersLoading;
   return (
     <Container>
-      <Helmet>
-        <title>
-          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
-        </title>
-      </Helmet>
+      <HelmetProvider>
+        <Helmet>
+          <title>
+            {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+          </title>
+        </Helmet>
+      </HelmetProvider>
       <Header>
         <Back>
           <Link to={`/`}>⇦</Link>
         </Back>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
-          <button onClick={toggleDarkAtom}>Mode</button>
         </Title>
+        <ToggleBtn />
       </Header>
       {loading ? (
-        <Loader>Loading...</Loader>
+        <Loader />
       ) : (
         <>
           <Overview>
@@ -243,7 +237,7 @@ function Coin({}: ICoinProps) {
             </OverviewItem>
             <OverviewItem>
               <span>Price</span>
-              <span>${tickersData?.quotes.USD.price}</span>
+              <span>${tickersData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>

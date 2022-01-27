@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { isDarkAtom } from "../atoms";
+import Loader from "../components/Loader";
+import ToggleBtn from "../components/ToggleBtn";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -18,15 +20,6 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  button {
-    background-color: ${(props) => props.theme.listbg};
-    color: ${(props) => props.theme.textColor};
-    border: none;
-    margin-left: 20px;
-    &:hover {
-      transform: scale(1.1);
-    }
-  }
 `;
 
 const CoinsList = styled.ul``;
@@ -36,6 +29,7 @@ const Coin = styled.li`
   color: ${(props) => props.theme.textColor};
   border-radius: 15px;
   margin-bottom: 10px;
+  border: 2px solid ${(props) => props.theme.border};
   a {
     display: flex;
     align-items: center;
@@ -51,13 +45,10 @@ const Coin = styled.li`
 `;
 
 const Title = styled.h1`
-  font-size: 48px;
+  font-size: 3em;
   color: ${(props) => props.theme.accentColor};
-`;
-
-const Loader = styled.span`
-  display: block;
-  text-align: center;
+  text-transform: uppercase;
+  font-weight: 600;
 `;
 
 const Img = styled.img`
@@ -79,8 +70,8 @@ interface ICoin {
 interface ICoinsProps {}
 
 function Coins({}: ICoinsProps) {
-  const setDarkAtom = useSetRecoilState(isDarkAtom);
-  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+  // const setDarkAtom = useSetRecoilState(isDarkAtom);
+  // const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
   // const [coins, setCoins] = useState<CoinInterface[]>([]);
   // const [loading, setLoading] = useState(true);
@@ -94,15 +85,17 @@ function Coins({}: ICoinsProps) {
   // }, []);
   return (
     <Container>
-      <Helmet>
-        <title>코인</title>
-      </Helmet>
+      <HelmetProvider>
+        <Helmet>
+          <title>COINS</title>
+        </Helmet>
+      </HelmetProvider>
       <Header>
-        <Title>코인</Title>
-        <button onClick={toggleDarkAtom}>Mode</button>
+        <Title>Coins</Title>
+        <ToggleBtn />
       </Header>
       {isLoading ? (
-        <Loader>Loading...</Loader>
+        <Loader />
       ) : (
         <CoinsList>
           {data?.slice(0, 100).map((coin) => (

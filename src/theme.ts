@@ -5,6 +5,8 @@ export const darkTheme: DefaultTheme = {
   textColor: "white",
   accentColor: "#FF9F86",
   listbg: "#62708D",
+  border: "rgba(255,255,255,0.1)",
+  toggle_position: "21px",
 };
 
 export const lightTheme: DefaultTheme = {
@@ -12,4 +14,6 @@ export const lightTheme: DefaultTheme = {
   textColor: "black",
   accentColor: "#FF9F86",
   listbg: "white",
+  border: "rgba(0, 0, 0, 0.1)",
+  toggle_position: "1px",
 };

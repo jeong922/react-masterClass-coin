@@ -4,12 +4,7 @@ import ApexChart from "react-apexcharts";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "../atoms";
-
-const Loader = styled.span`
-  display: block;
-  text-align: center;
-`;
-
+import Loader from "../components/Loader";
 interface IHistorical {
   time_open: string;
   time_close: string;
@@ -38,7 +33,7 @@ function Chart({ coinId }: ChartProps) {
   return (
     <div>
       {isLoading ? (
-        <Loader>"Loading chart"</Loader>
+        <Loader />
       ) : (
         <ApexChart
           type="candlestick"
@@ -46,7 +41,12 @@ function Chart({ coinId }: ChartProps) {
             {
               data: data?.map((price) => ({
                 x: price.time_close,
-                y: [price.open, price.high, price.low, price.close],
+                y: [
+                  price.open.toFixed(3),
+                  price.high.toFixed(3),
+                  price.low.toFixed(3),
+                  price.close.toFixed(3),
+                ],
               })),
             },
           ]}

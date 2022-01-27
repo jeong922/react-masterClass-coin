@@ -1,11 +1,7 @@
 import { useQuery } from "react-query";
 import { fetchCoinTickers } from "../api";
 import styled from "styled-components";
-
-const Loader = styled.span`
-  display: block;
-  text-align: center;
-`;
+import Loader from "../components/Loader";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -13,21 +9,40 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
-const PriceList = styled.div``;
+const PriceList = styled.div`
+  width: 100%;
+  background-color: ${(props) => props.theme.listbg};
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid ${(props) => props.theme.border};
+`;
 
 const PriceChange = styled.div`
   width: 100%;
-  height: 50px;
-  background-color: ${(props) => props.theme.listbg};
+  height: 40px;
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0px 15px;
   border-radius: 10px;
+  border: 2px solid ${(props) => props.theme.border};
+  &:last-child {
+    margin-bottom: 0;
+  }
   span {
-    font-weight: 400;
-    text-transform: uppercase;
+    font-size: 15px;
+    &:first-child {
+      text-transform: uppercase;
+    }
+    &:last-child {
+      font-weight: 600;
+    }
   }
 `;
 
@@ -77,37 +92,48 @@ function Price({ coinId }: PriceProps) {
       refetchInterval: 5000,
     }
   );
-
   return (
     <div>
       {isLoading ? (
-        <Loader>"Loading chart"</Loader>
+        <Loader />
       ) : (
         <Container>
           <PriceList>
             <PriceChange>
+              <span>ath date</span>
+              <span>
+                {data?.quotes.USD.ath_date.slice(0, 10).replaceAll("-", ".")}
+              </span>
+            </PriceChange>
+            <PriceChange>
+              <span>ath price</span>
+              <span>${data?.quotes.USD.ath_price.toFixed(3)}</span>
+            </PriceChange>
+            <PriceChange>
+              <span>market cap</span>
+              <div>
+                <span>${data?.quotes.USD.market_cap}</span>
+              </div>
+            </PriceChange>
+            <PriceChange>
               <span>market cap change 24h</span>
-              <span>${data?.quotes.USD.market_cap_change_24h}</span>
+              <span>{data?.quotes.USD.market_cap_change_24h}%</span>
             </PriceChange>
             <PriceChange>
-              <span>percent change 1h</span>
-              <span>${data?.quotes.USD.percent_change_1h}</span>
-            </PriceChange>
-            <PriceChange>
-              <span>percent change 6h</span>
-              <span>${data?.quotes.USD.percent_change_6h}</span>
+              <span>volume 24h change</span>
+              <span>{data?.quotes.USD.volume_24h_change_24h}%</span>
             </PriceChange>
             <PriceChange>
               <span>percent change 12h</span>
-              <span>${data?.quotes.USD.percent_change_12h}</span>
+              <span>{data?.quotes.USD.percent_change_12h}%</span>
             </PriceChange>
             <PriceChange>
               <span>percent change 24h</span>
-              <span>${data?.quotes.USD.percent_change_24h}</span>
+              <span>{data?.quotes.USD.percent_change_24h}%</span>
             </PriceChange>
             <PriceChange>
               <span>percent change 7days</span>
-              <span>${data?.quotes.USD.percent_change_7d}</span>
+              <span>{data?.quotes.USD.percent_change_7d}%</span>
             </PriceChange>
           </PriceList>
         </Container>
