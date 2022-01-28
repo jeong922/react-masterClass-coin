@@ -168,8 +168,6 @@ interface PriceData {
 interface ICoinProps {}
 
 function Coin({}: ICoinProps) {
-  const setDarkAtom = useSetRecoilState(isDarkAtom);
-  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
   const { coinId } = useParams() as unknown as RouteParams; // const { coinId } = useParams<{ coinId: string }>(); 이렇게 해도 됨
   // const { name } = useLocation().state as RouteState;
   const { state } = useLocation() as RouteState;

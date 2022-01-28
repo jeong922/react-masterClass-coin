@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useCallback, useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { isDarkAtom } from "../atoms";
+import { darkTheme, lightTheme } from "../theme";
 
 const ToggleWrapper = styled.div`
   width: 45px;
@@ -26,13 +27,19 @@ const Toggle = styled.button`
 `;
 
 function ToggleBtn() {
-  const setDarkAtom = useSetRecoilState(isDarkAtom);
-  const toggleDarkAtom = () => {
-    setDarkAtom((prev) => !prev);
-  };
+  const [theme, setTheme] = useRecoilState(isDarkAtom);
+  const handleChangeTheme = useCallback(() => {
+    if (theme === darkTheme) {
+      localStorage.setItem("theme", "light");
+      setTheme(lightTheme);
+      return;
+    }
+    localStorage.setItem("theme", "dark");
+    setTheme(darkTheme);
+  }, [theme, setTheme]);
   return (
     <ToggleWrapper>
-      <Toggle onClick={toggleDarkAtom} />
+      <Toggle onClick={handleChangeTheme} />
     </ToggleWrapper>
   );
 }
