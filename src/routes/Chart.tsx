@@ -1,10 +1,11 @@
-import { useQuery } from "react-query";
-import { fetchCoinHistory } from "../api";
-import ApexChart from "react-apexcharts";
-import styled from "styled-components";
-import { useRecoilValue } from "recoil";
-import { isDarkAtom } from "../atoms";
-import Loader from "../components/Loader";
+import { useQuery } from 'react-query';
+import { fetchCoinHistory } from '../api';
+import ApexChart from 'react-apexcharts';
+import { useRecoilValue } from 'recoil';
+import { isDarkAtom } from '../atoms';
+import Loader from '../components/Loader';
+
+// https://apexcharts.com/
 interface IHistorical {
   time_open: string;
   time_close: string;
@@ -23,7 +24,7 @@ interface ChartProps {
 function Chart({ coinId }: ChartProps) {
   const isDark = useRecoilValue(isDarkAtom);
   const { isLoading, data } = useQuery<IHistorical[]>(
-    ["ohlcv", coinId],
+    ['ohlcv', coinId],
     () => fetchCoinHistory(coinId),
     {
       refetchInterval: 10000,
@@ -31,7 +32,7 @@ function Chart({ coinId }: ChartProps) {
   );
 
   return (
-    <div>
+    <>
       {isLoading ? (
         <Loader />
       ) : (
@@ -52,7 +53,7 @@ function Chart({ coinId }: ChartProps) {
           ]}
           options={{
             theme: {
-              mode: isDark ? "dark" : "light",
+              mode: isDark ? 'dark' : 'light',
             },
             chart: {
               width: 500,
@@ -60,7 +61,7 @@ function Chart({ coinId }: ChartProps) {
               toolbar: {
                 show: false,
               },
-              background: "transparent",
+              background: 'transparent',
             },
             yaxis: {
               show: false,
@@ -69,13 +70,13 @@ function Chart({ coinId }: ChartProps) {
               axisBorder: { show: false },
               axisTicks: { show: false },
               labels: { show: true },
-              type: "datetime",
+              type: 'datetime',
               categories: data?.map((price) => price.time_close),
             },
           }}
         />
       )}
-    </div>
+    </>
   );
 }
 

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from 'react-query';
 import {
   Link,
   Route,
@@ -7,16 +6,14 @@ import {
   useLocation,
   useMatch,
   useParams,
-} from "react-router-dom";
-import styled from "styled-components";
-import { fetchCoinInfo, fetchCoinTickers } from "../api";
-import Chart from "./Chart";
-import Price from "./Price";
-import { useSetRecoilState } from "recoil";
-import { isDarkAtom } from "../atoms";
-import ToggleBtn from "../components/ToggleBtn";
-import { HelmetProvider, Helmet } from "react-helmet-async";
-import Loader from "../components/Loader";
+} from 'react-router-dom';
+import styled from 'styled-components';
+import { fetchCoinInfo, fetchCoinTickers } from '../api';
+import Chart from './Chart';
+import Price from './Price';
+import ToggleBtn from '../components/ToggleBtn';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
+import Loader from '../components/Loader';
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -171,19 +168,20 @@ function Coin({}: ICoinProps) {
   const { coinId } = useParams() as unknown as RouteParams; // const { coinId } = useParams<{ coinId: string }>(); 이렇게 해도 됨
   // const { name } = useLocation().state as RouteState;
   const { state } = useLocation() as RouteState;
-  const priceMatch = useMatch("/:coinId/price");
-  const chartMatch = useMatch("/:coinId/chart");
+  const priceMatch = useMatch('/:coinId/price');
+  const chartMatch = useMatch('/:coinId/chart');
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
-    ["info", coinId],
+    ['info', coinId],
     () => fetchCoinInfo(coinId)
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
-    ["tickers", coinId],
+    ['tickers', coinId],
     () => fetchCoinTickers(coinId),
     {
       refetchInterval: 5000,
     }
   );
+  // useQuery를 사용하지 않으면 아래와 같이 작성해야 함.
   // const [loading, setLoading] = useState(true);
   // const [info, setInfo] = useState<InfoData>();
   // const [priceInfo, setPriceInfo] = useState<PriceData>();
@@ -207,7 +205,7 @@ function Coin({}: ICoinProps) {
       <HelmetProvider>
         <Helmet>
           <title>
-            {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+            {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
           </title>
         </Helmet>
       </HelmetProvider>
@@ -216,7 +214,7 @@ function Coin({}: ICoinProps) {
           <Link to={`/`}>⇦</Link>
         </Back>
         <Title>
-          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+          {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
         <ToggleBtn />
       </Header>
